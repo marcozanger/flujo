@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flujo - Candidate Dashboard</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #f0f2f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+  .phone-frame {
+    width: 390px;
+    height: 844px;
+    background: #f5f5f5;
+    border-radius: 40px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+  .status-bar {
+    height: 54px;
+    background: #1a237e;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding: 0 28px 8px;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .app-header {
+    background: #1a237e;
+    padding: 16px 20px 20px;
+    color: #fff;
+  }
+  .header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .header-title {
+    font-size: 24px;
+    font-weight: 700;
+  }
+  .header-badge {
+    background: rgba(255,255,255,0.2);
+    padding: 4px 12px;
+    border-radius: 16px;
+    font-size: 13px;
+  }
+  .search-bar {
+    width: 100%;
+    padding: 12px 16px;
+    border: none;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+    font-size: 15px;
+    outline: none;
+  }
+  .search-bar::placeholder { color: rgba(255,255,255,0.5); }
+  .filter-bar {
+    display: flex;
+    gap: 8px;
+    padding: 12px 20px;
+    overflow-x: auto;
+    background: #fff;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  .filter-chip {
+    flex-shrink: 0;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    border: 1.5px solid #e0e0e0;
+    background: #fff;
+    color: #555;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .filter-chip.active {
+    background: #1a237e;
+    color: #fff;
+    border-color: #1a237e;
+  }
+  .filter-chip.warning {
+    background: #fff3e0;
+    color: #e65100;
+    border-color: #ffb74d;
+  }
+  .stats-bar {
+    display: flex;
+    gap: 12px;
+    padding: 12px 20px;
+    background: #fff;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  .stat-item {
+    flex: 1;
+    text-align: center;
+    padding: 8px 4px;
+    border-radius: 8px;
+    background: #f5f7ff;
+  }
+  .stat-number {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1a237e;
+  }
+  .stat-label {
+    font-size: 10px;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 2px;
+  }
+  .candidate-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px 16px;
+    padding-bottom: 70px;
+  }
+  .candidate-card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 10px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    cursor: pointer;
+    transition: box-shadow 0.15s;
+    border-left: 4px solid transparent;
+  }
+  .candidate-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+  .candidate-card.alert {
+    border-left-color: #ff9800;
+    background: #fffbf5;
+  }
+  .candidate-card.fit-other {
+    border-left-color: #2196f3;
+  }
+  .card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+  }
+  .candidate-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: #212121;
+  }
+  .candidate-position {
+    font-size: 13px;
+    color: #666;
+    margin-top: 2px;
+  }
+  .days-badge {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 10px;
+    white-space: nowrap;
+  }
+  .days-badge.ok {
+    background: #e8f5e9;
+    color: #2e7d32;
+  }
+  .days-badge.warning {
+    background: #fff3e0;
+    color: #e65100;
+  }
+  .days-badge.critical {
+    background: #ffebee;
+    color: #c62828;
+  }
+  .card-tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+  }
+  .tag {
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .tag.status-interview { background: #e3f2fd; color: #1565c0; }
+  .tag.status-offer { background: #e8f5e9; color: #2e7d32; }
+  .tag.status-screening { background: #f3e5f5; color: #7b1fa2; }
+  .tag.status-technical { background: #fff8e1; color: #f57f17; }
+  .tag.status-rejected { background: #ffebee; color: #c62828; }
+  .tag.backend-pending { background: #fff3e0; color: #ef6c00; }
+  .tag.backend-ok { background: #e8f5e9; color: #388e3c; }
+  .tag.backend-error { background: #ffebee; color: #d32f2f; }
+  .tag.fit-other {
+    background: #e3f2fd;
+    color: #1565c0;
+    border: 1px dashed #90caf9;
+  }
+  .alert-text {
+    font-size: 11px;
+    color: #e65100;
+    margin-top: 6px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .bottom-nav {
+    position: absolute;
+    bottom: 0;
+    left: 0; right: 0;
+    background: #fff;
+    border-top: 1px solid #e0e0e0;
+    display: flex;
+    padding: 8px 0 24px;
+  }
+  .nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    color: #999;
+    text-decoration: none;
+    padding-top: 4px;
+  }
+  .nav-item.active {
+    color: #1a237e;
+  }
+  .nav-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+  }
+  .nav-item.active .nav-icon {
+    background: #e8eaf6;
+  }
+
+  .nav-links {
+    position: absolute;
+    bottom: 0;
+    left: 0; right: 0;
+    background: rgba(0,0,0,0.85);
+    padding: 12px 20px;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    font-size: 11px;
+    z-index: 10;
+  }
+  .nav-links a {
+    color: rgba(255,255,255,0.6);
+    text-decoration: none;
+    padding: 4px 8px;
+    border-radius: 4px;
+  }
+  .nav-links a:hover { background: rgba(255,255,255,0.1); }
+  .nav-links a.current { color: #fff; font-weight: 600; background: rgba(255,255,255,0.15); }
+</style>
+</head>
+<body>
+<div class="phone-frame">
+  <div class="status-bar">
+    <span>9:41</span>
+    <span>GL</span>
+  </div>
+  <div class="app-header">
+    <div class="header-row">
+      <div class="header-title">Candidates</div>
+      <div class="header-badge">47 total</div>
+    </div>
+    <input class="search-bar" placeholder="Search candidates..." />
+  </div>
+
+  <div class="filter-bar">
+    <div class="filter-chip active">All</div>
+    <div class="filter-chip">Interview</div>
+    <div class="filter-chip">Screening</div>
+    <div class="filter-chip">Technical</div>
+    <div class="filter-chip">Offer</div>
+    <div class="filter-chip warning">Waiting too long</div>
+  </div>
+
+  <div class="stats-bar">
+    <div class="stat-item">
+      <div class="stat-number">12</div>
+      <div class="stat-label">Interview</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">8</div>
+      <div class="stat-label">Screening</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">5</div>
+      <div class="stat-label">Offer</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number" style="color:#e65100">6</div>
+      <div class="stat-label">Delayed</div>
+    </div>
+  </div>
+
+  <div class="candidate-list">
+
+    <div class="candidate-card alert" onclick="window.location='03-candidate-detail.html'">
+      <div class="card-top">
+        <div>
+          <div class="candidate-name">Maria Gonzalez</div>
+          <div class="candidate-position">Sr. React Developer</div>
+        </div>
+        <div class="days-badge critical">32 days</div>
+      </div>
+      <div class="card-tags">
+        <span class="tag status-interview">Interview</span>
+        <span class="tag backend-pending">Backend: Pending</span>
+      </div>
+      <div class="alert-text">Waiting too long - no status update in 14 days</div>
+    </div>
+
+    <div class="candidate-card fit-other">
+      <div class="card-top">
+        <div>
+          <div class="candidate-name">Lucas Fernandez</div>
+          <div class="candidate-position">Full Stack Engineer</div>
+        </div>
+        <div class="days-badge ok">5 days</div>
+      </div>
+      <div class="card-tags">
+        <span class="tag status-screening">Screening</span>
+        <span class="tag backend-ok">Backend: OK</span>
+        <span class="tag fit-other">Fits 2 other vacancies</span>
+      </div>
+    </div>
+
+    <div class="candidate-card">
+      <div class="card-top">
+        <div>
+          <div class="candidate-name">Ana Rodriguez</div>
+          <div class="candidate-position">DevOps Engineer</div>
+        </div>
+        <div class="days-badge ok">3 days</div>
+      </div>
+      <div class="card-tags">
+        <span class="tag status-technical">Technical</span>
+        <span class="tag backend-ok">Backend: OK</span>
+      </div>
+    </div>
+
+    <div class="candidate-card alert">
+      <div class="card-top">
+        <div>
+          <div class="candidate-name">Carlos Mendez</div>
+          <div class="candidate-position">Java Backend Developer</div>
+        </div>
+        <div class="days-badge warning">18 days</div>
+      </div>
+      <div class="card-tags">
+        <span class="tag status-offer">Offer</span>
+        <span class="tag backend-error">Backend: Error</span>
+      </div>
+      <div class="alert-text">Backend system error - needs attention</div>
+    </div>
+
+    <div class="candidate-card">
+      <div class="card-top">
+        <div>
+          <div class="candidate-name">Sofia Herrera</div>
+          <div class="candidate-position">QA Automation Lead</div>
+        </div>
+        <div class="days-badge ok">1 day</div>
+      </div>
+      <div class="card-tags">
+        <span class="tag status-screening">Screening</span>
+        <span class="tag backend-ok">Backend: OK</span>
+      </div>
+    </div>
+
+    <div class="candidate-card">
+      <div class="card-top">
+        <div>
+          <div class="candidate-name">Diego Alvarez</div>
+          <div class="candidate-position">Cloud Architect</div>
+        </div>
+        <div class="days-badge warning">21 days</div>
+      </div>
+      <div class="card-tags">
+        <span class="tag status-interview">Interview</span>
+        <span class="tag backend-pending">Backend: Pending</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="bottom-nav">
+    <a class="nav-item active" href="02-candidates.html">
+      <div class="nav-icon">P</div>
+      <span>Candidates</span>
+    </a>
+    <a class="nav-item" href="04-vacancies.html">
+      <div class="nav-icon">V</div>
+      <span>Vacancies</span>
+    </a>
+    <a class="nav-item" href="05-resume-upload.html">
+      <div class="nav-icon">R</div>
+      <span>Resume</span>
+    </a>
+    <a class="nav-item" href="06-email.html">
+      <div class="nav-icon">E</div>
+      <span>Email</span>
+    </a>
+  </div>
+
+  <div class="nav-links">
+    <a href="01-login.html">Login</a>
+    <a href="02-candidates.html" class="current">Candidates</a>
+    <a href="03-candidate-detail.html">Detail</a>
+    <a href="04-vacancies.html">Vacancies</a>
+    <a href="05-resume-upload.html">Resume</a>
+    <a href="06-email.html">Email</a>
+  </div>
+</div>
+</body>
+</html>

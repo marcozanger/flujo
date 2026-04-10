@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flujo - Vacancies</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #f0f2f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+  .phone-frame {
+    width: 390px;
+    height: 844px;
+    background: #f5f5f5;
+    border-radius: 40px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+  .status-bar {
+    height: 54px;
+    background: #1a237e;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding: 0 28px 8px;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .app-header {
+    background: #1a237e;
+    padding: 16px 20px 20px;
+    color: #fff;
+  }
+  .header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .header-title {
+    font-size: 24px;
+    font-weight: 700;
+  }
+  .header-badge {
+    background: rgba(255,255,255,0.2);
+    padding: 4px 12px;
+    border-radius: 16px;
+    font-size: 13px;
+  }
+  .search-bar {
+    width: 100%;
+    padding: 12px 16px;
+    border: none;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+    font-size: 15px;
+    outline: none;
+  }
+  .search-bar::placeholder { color: rgba(255,255,255,0.5); }
+
+  .summary-bar {
+    display: flex;
+    gap: 8px;
+    padding: 14px 20px;
+    background: #fff;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  .summary-item {
+    flex: 1;
+    text-align: center;
+    padding: 10px 4px;
+    border-radius: 10px;
+  }
+  .summary-item.total { background: #e8eaf6; }
+  .summary-item.open { background: #e8f5e9; }
+  .summary-item.urgent { background: #ffebee; }
+  .summary-num {
+    font-size: 22px;
+    font-weight: 700;
+  }
+  .summary-item.total .summary-num { color: #1a237e; }
+  .summary-item.open .summary-num { color: #2e7d32; }
+  .summary-item.urgent .summary-num { color: #c62828; }
+  .summary-label {
+    font-size: 10px;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 2px;
+  }
+
+  .vacancy-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px 16px;
+    padding-bottom: 80px;
+  }
+  .vacancy-card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 18px;
+    margin-bottom: 10px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    border-left: 4px solid transparent;
+    transition: box-shadow 0.15s;
+  }
+  .vacancy-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+  .vacancy-card.urgent {
+    border-left-color: #c62828;
+    background: #fffafa;
+  }
+  .vacancy-card.warning {
+    border-left-color: #ff9800;
+  }
+  .vac-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 6px;
+  }
+  .vac-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #212121;
+  }
+  .vac-id {
+    font-size: 12px;
+    color: #999;
+    margin-top: 2px;
+  }
+  .vac-days {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 10px;
+    white-space: nowrap;
+  }
+  .vac-days.ok { background: #e8f5e9; color: #2e7d32; }
+  .vac-days.warning { background: #fff3e0; color: #e65100; }
+  .vac-days.critical { background: #ffebee; color: #c62828; }
+
+  .vac-meta {
+    display: flex;
+    gap: 16px;
+    margin-top: 10px;
+    font-size: 13px;
+    color: #666;
+  }
+  .vac-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .candidate-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background: #e8eaf6;
+    color: #1a237e;
+    border-radius: 50%;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .progress-bar {
+    margin-top: 12px;
+    height: 6px;
+    background: #f0f0f0;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.3s;
+  }
+  .progress-fill.good { background: #4caf50; }
+  .progress-fill.medium { background: #ff9800; }
+  .progress-fill.low { background: #f44336; }
+
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 4px;
+    font-size: 11px;
+    color: #999;
+  }
+  .vac-alert {
+    margin-top: 8px;
+    font-size: 11px;
+    color: #c62828;
+    font-weight: 500;
+  }
+
+  .bottom-nav {
+    position: absolute;
+    bottom: 40px;
+    left: 0; right: 0;
+    background: #fff;
+    border-top: 1px solid #e0e0e0;
+    display: flex;
+    padding: 8px 0 24px;
+  }
+  .nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    color: #999;
+    text-decoration: none;
+    padding-top: 4px;
+  }
+  .nav-item.active { color: #1a237e; }
+  .nav-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+  }
+  .nav-item.active .nav-icon { background: #e8eaf6; }
+
+  .nav-links {
+    position: absolute;
+    bottom: 0;
+    left: 0; right: 0;
+    background: rgba(0,0,0,0.85);
+    padding: 12px 20px;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    font-size: 11px;
+    z-index: 10;
+  }
+  .nav-links a {
+    color: rgba(255,255,255,0.6);
+    text-decoration: none;
+    padding: 4px 8px;
+    border-radius: 4px;
+  }
+  .nav-links a:hover { background: rgba(255,255,255,0.1); }
+  .nav-links a.current { color: #fff; font-weight: 600; background: rgba(255,255,255,0.15); }
+</style>
+</head>
+<body>
+<div class="phone-frame">
+  <div class="status-bar">
+    <span>9:41</span>
+    <span>GL</span>
+  </div>
+  <div class="app-header">
+    <div class="header-row">
+      <div class="header-title">Vacancies</div>
+      <div class="header-badge">18 open</div>
+    </div>
+    <input class="search-bar" placeholder="Search vacancies..." />
+  </div>
+
+  <div class="summary-bar">
+    <div class="summary-item total">
+      <div class="summary-num">24</div>
+      <div class="summary-label">Total</div>
+    </div>
+    <div class="summary-item open">
+      <div class="summary-num">18</div>
+      <div class="summary-label">Open</div>
+    </div>
+    <div class="summary-item urgent">
+      <div class="summary-num">4</div>
+      <div class="summary-label">Urgent</div>
+    </div>
+  </div>
+
+  <div class="vacancy-list">
+
+    <div class="vacancy-card urgent">
+      <div class="vac-top">
+        <div>
+          <div class="vac-title">Sr. React Developer</div>
+          <div class="vac-id">VAC-2024-0089</div>
+        </div>
+        <div class="vac-days critical">62 days open</div>
+      </div>
+      <div class="vac-meta">
+        <div class="vac-meta-item">
+          <span class="candidate-count">3</span>
+          candidates
+        </div>
+        <div class="vac-meta-item">Client: Fintech Co</div>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill low" style="width: 20%"></div>
+      </div>
+      <div class="progress-label">
+        <span>Pipeline progress</span>
+        <span>1 of 5 stages filled</span>
+      </div>
+      <div class="vac-alert">Open for over 60 days - escalation recommended</div>
+    </div>
+
+    <div class="vacancy-card warning">
+      <div class="vac-top">
+        <div>
+          <div class="vac-title">Full Stack Engineer</div>
+          <div class="vac-id">VAC-2024-0102</div>
+        </div>
+        <div class="vac-days warning">34 days open</div>
+      </div>
+      <div class="vac-meta">
+        <div class="vac-meta-item">
+          <span class="candidate-count">7</span>
+          candidates
+        </div>
+        <div class="vac-meta-item">Client: HealthTech</div>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill medium" style="width: 55%"></div>
+      </div>
+      <div class="progress-label">
+        <span>Pipeline progress</span>
+        <span>3 of 5 stages filled</span>
+      </div>
+    </div>
+
+    <div class="vacancy-card">
+      <div class="vac-top">
+        <div>
+          <div class="vac-title">Frontend Lead - Fintech</div>
+          <div class="vac-id">VAC-2024-0112</div>
+        </div>
+        <div class="vac-days ok">8 days open</div>
+      </div>
+      <div class="vac-meta">
+        <div class="vac-meta-item">
+          <span class="candidate-count">2</span>
+          candidates
+        </div>
+        <div class="vac-meta-item">Client: Fintech Co</div>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill good" style="width: 40%"></div>
+      </div>
+      <div class="progress-label">
+        <span>Pipeline progress</span>
+        <span>2 of 5 stages filled</span>
+      </div>
+    </div>
+
+    <div class="vacancy-card">
+      <div class="vac-top">
+        <div>
+          <div class="vac-title">DevOps Engineer</div>
+          <div class="vac-id">VAC-2024-0095</div>
+        </div>
+        <div class="vac-days ok">12 days open</div>
+      </div>
+      <div class="vac-meta">
+        <div class="vac-meta-item">
+          <span class="candidate-count">4</span>
+          candidates
+        </div>
+        <div class="vac-meta-item">Client: RetailMax</div>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill good" style="width: 65%"></div>
+      </div>
+      <div class="progress-label">
+        <span>Pipeline progress</span>
+        <span>3 of 5 stages filled</span>
+      </div>
+    </div>
+
+    <div class="vacancy-card urgent">
+      <div class="vac-top">
+        <div>
+          <div class="vac-title">Cloud Architect</div>
+          <div class="vac-id">VAC-2024-0078</div>
+        </div>
+        <div class="vac-days critical">85 days open</div>
+      </div>
+      <div class="vac-meta">
+        <div class="vac-meta-item">
+          <span class="candidate-count">1</span>
+          candidates
+        </div>
+        <div class="vac-meta-item">Client: InsureTech</div>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill low" style="width: 10%"></div>
+      </div>
+      <div class="progress-label">
+        <span>Pipeline progress</span>
+        <span>0 of 5 stages filled</span>
+      </div>
+      <div class="vac-alert">Critical - open 85 days with only 1 candidate</div>
+    </div>
+
+    <div class="vacancy-card">
+      <div class="vac-top">
+        <div>
+          <div class="vac-title">QA Automation Lead</div>
+          <div class="vac-id">VAC-2024-0118</div>
+        </div>
+        <div class="vac-days ok">3 days open</div>
+      </div>
+      <div class="vac-meta">
+        <div class="vac-meta-item">
+          <span class="candidate-count">5</span>
+          candidates
+        </div>
+        <div class="vac-meta-item">Client: FinServ</div>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill good" style="width: 75%"></div>
+      </div>
+      <div class="progress-label">
+        <span>Pipeline progress</span>
+        <span>4 of 5 stages filled</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="bottom-nav">
+    <a class="nav-item" href="02-candidates.html">
+      <div class="nav-icon">P</div>
+      <span>Candidates</span>
+    </a>
+    <a class="nav-item active" href="04-vacancies.html">
+      <div class="nav-icon">V</div>
+      <span>Vacancies</span>
+    </a>
+    <a class="nav-item" href="05-resume-upload.html">
+      <div class="nav-icon">R</div>
+      <span>Resume</span>
+    </a>
+    <a class="nav-item" href="06-email.html">
+      <div class="nav-icon">E</div>
+      <span>Email</span>
+    </a>
+  </div>
+
+  <div class="nav-links">
+    <a href="01-login.html">Login</a>
+    <a href="02-candidates.html">Candidates</a>
+    <a href="03-candidate-detail.html">Detail</a>
+    <a href="04-vacancies.html" class="current">Vacancies</a>
+    <a href="05-resume-upload.html">Resume</a>
+    <a href="06-email.html">Email</a>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flujo - Candidate Detail</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #f0f2f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+  .phone-frame {
+    width: 390px;
+    height: 844px;
+    background: #f5f5f5;
+    border-radius: 40px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+  .status-bar {
+    height: 54px;
+    background: #1a237e;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding: 0 28px 8px;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .detail-header {
+    background: #1a237e;
+    padding: 0 20px 24px;
+    color: #fff;
+  }
+  .back-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 0;
+    font-size: 14px;
+    color: rgba(255,255,255,0.8);
+    cursor: pointer;
+  }
+  .back-row:hover { color: #fff; }
+  .profile-section {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    margin-top: 8px;
+  }
+  .avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #3949ab;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    font-weight: 700;
+    color: #fff;
+    flex-shrink: 0;
+  }
+  .profile-info h1 {
+    font-size: 22px;
+    font-weight: 700;
+  }
+  .profile-info p {
+    font-size: 14px;
+    color: rgba(255,255,255,0.75);
+    margin-top: 2px;
+  }
+  .detail-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    padding-bottom: 80px;
+  }
+  .alert-banner {
+    background: #fff3e0;
+    border: 1px solid #ffcc02;
+    border-radius: 12px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .alert-banner .icon { font-size: 20px; }
+  .alert-banner .text {
+    font-size: 13px;
+    color: #e65100;
+    font-weight: 500;
+  }
+  .section-card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 18px;
+    margin-bottom: 12px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  }
+  .section-title {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: #888;
+    margin-bottom: 14px;
+  }
+  .info-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 14px;
+  }
+  .info-row:last-child { border-bottom: none; }
+  .info-label { color: #666; }
+  .info-value { font-weight: 600; color: #212121; }
+  .status-tag {
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .status-tag.interview { background: #e3f2fd; color: #1565c0; }
+  .status-tag.pending { background: #fff3e0; color: #ef6c00; }
+  .status-tag.error { background: #ffebee; color: #d32f2f; }
+  .status-tag.ok { background: #e8f5e9; color: #388e3c; }
+
+  .timeline {
+    position: relative;
+    padding-left: 20px;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 6px;
+    top: 4px;
+    bottom: 4px;
+    width: 2px;
+    background: #e0e0e0;
+  }
+  .timeline-item {
+    position: relative;
+    padding-bottom: 16px;
+  }
+  .timeline-item:last-child { padding-bottom: 0; }
+  .timeline-dot {
+    position: absolute;
+    left: -17px;
+    top: 3px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #1a237e;
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 2px #1a237e;
+  }
+  .timeline-dot.inactive {
+    background: #ccc;
+    box-shadow: 0 0 0 2px #ccc;
+  }
+  .timeline-date {
+    font-size: 11px;
+    color: #999;
+    margin-bottom: 2px;
+  }
+  .timeline-text {
+    font-size: 13px;
+    color: #333;
+    font-weight: 500;
+  }
+  .action-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 4px;
+  }
+  .btn-action {
+    flex: 1;
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    display: block;
+  }
+  .btn-primary {
+    background: #1a237e;
+    color: #fff;
+  }
+  .btn-secondary {
+    background: #e8eaf6;
+    color: #1a237e;
+  }
+  .vacancy-match {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .vacancy-match:last-child { border-bottom: none; }
+  .vacancy-match-info {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+  }
+  .vacancy-match-info span {
+    display: block;
+    font-size: 12px;
+    font-weight: 400;
+    color: #888;
+    margin-top: 2px;
+  }
+  .match-pct {
+    font-size: 13px;
+    font-weight: 700;
+    color: #2e7d32;
+    background: #e8f5e9;
+    padding: 4px 10px;
+    border-radius: 8px;
+  }
+
+  .nav-links {
+    position: absolute;
+    bottom: 0;
+    left: 0; right: 0;
+    background: rgba(0,0,0,0.85);
+    padding: 12px 20px;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    font-size: 11px;
+    z-index: 10;
+  }
+  .nav-links a {
+    color: rgba(255,255,255,0.6);
+    text-decoration: none;
+    padding: 4px 8px;
+    border-radius: 4px;
+  }
+  .nav-links a:hover { background: rgba(255,255,255,0.1); }
+  .nav-links a.current { color: #fff; font-weight: 600; background: rgba(255,255,255,0.15); }
+</style>
+</head>
+<body>
+<div class="phone-frame">
+  <div class="status-bar">
+    <span>9:41</span>
+    <span>GL</span>
+  </div>
+  <div class="detail-header">
+    <a class="back-row" href="02-candidates.html">&larr; Back to Candidates</a>
+    <div class="profile-section">
+      <div class="avatar">MG</div>
+      <div class="profile-info">
+        <h1>Maria Gonzalez</h1>
+        <p>Sr. React Developer</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="detail-content">
+
+    <div class="alert-banner">
+      <div class="icon">&#9888;</div>
+      <div class="text">This candidate has been waiting 32 days with no status update. Last activity was 14 days ago.</div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-title">Status</div>
+      <div class="info-row">
+        <span class="info-label">Candidate Status</span>
+        <span class="status-tag interview">Interview</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Backend System</span>
+        <span class="status-tag pending">Pending</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Days in Pipeline</span>
+        <span class="info-value">32 days</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Applied For</span>
+        <span class="info-value">Sr. React Developer</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Vacancy ID</span>
+        <span class="info-value">VAC-2024-0089</span>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-title">Contact</div>
+      <div class="info-row">
+        <span class="info-label">Email</span>
+        <span class="info-value">m.gonzalez@email.com</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Phone</span>
+        <span class="info-value">+54 11 5555-1234</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Location</span>
+        <span class="info-value">Buenos Aires, AR</span>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-title">Other Vacancy Matches</div>
+      <div class="vacancy-match">
+        <div class="vacancy-match-info">
+          Frontend Lead - Fintech
+          <span>VAC-2024-0112 - 2 candidates</span>
+        </div>
+        <div class="match-pct">High</div>
+      </div>
+      <div class="vacancy-match">
+        <div class="vacancy-match-info">
+          React Native Developer
+          <span>VAC-2024-0098 - 5 candidates</span>
+        </div>
+        <div class="match-pct">Medium</div>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-title">Timeline</div>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">Mar 27, 2026</div>
+          <div class="timeline-text">Interview scheduled</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">Mar 15, 2026</div>
+          <div class="timeline-text">Technical assessment passed</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">Mar 10, 2026</div>
+          <div class="timeline-text">Screening completed</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot inactive"></div>
+          <div class="timeline-date">Mar 8, 2026</div>
+          <div class="timeline-text">Application received</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="action-buttons">
+      <a class="btn-action btn-secondary" href="05-resume-upload.html">Upload Resume</a>
+      <a class="btn-action btn-primary" href="06-email.html">Send Email</a>
+    </div>
+
+  </div>
+
+  <div class="nav-links">
+    <a href="01-login.html">Login</a>
+    <a href="02-candidates.html">Candidates</a>
+    <a href="03-candidate-detail.html" class="current">Detail</a>
+    <a href="04-vacancies.html">Vacancies</a>
+    <a href="05-resume-upload.html">Resume</a>
+    <a href="06-email.html">Email</a>
+  </div>
+</div>
+</body>
+</html>
