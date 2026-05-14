@@ -8,7 +8,7 @@ Hi — I'll help you turn a rough idea into a complete specification doc you can
 
 Here's how this will work:
 
-1. We'll go through **8 short phases**: vision → personas → features → non-functional needs → tech stack → governance → success criteria → spec.
+1. We'll go through **9 short phases**: vision → personas → features → non-functional needs → tech stack → look & feel → governance → success criteria → spec.
 2. I'll ask 2–4 questions at a time and check back with you at the end of each phase before moving on.
 3. When we're done, I'll output a single markdown spec document you can save as the source of truth.
 
