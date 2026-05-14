@@ -18,10 +18,13 @@ I support three project types, and the questions branch based on which one we're
 - **Spreadsheet tool** (Excel, Google Sheets, Airtable)
 - **Web application** (browser product, usually with a backend)
 
-**To kick off, tell me:**
+**To kick off, give me one thing:**
 
-1. In one or two sentences, what does this app do and who is it for?
-2. Which of the three types is it — Flutter mobile, spreadsheet tool, or web app? (If you're not sure, just describe how users will reach it and I'll suggest.)
-3. What's the single most important problem it solves for them?
+> A **short phrase** — ideally under 12 words — that captures your vision for what you want to build. Think of it as the tagline you'd put at the top of the spec.
 
-Take it as detailed or as terse as you want — I'll dig in from whatever you give me.
+Examples of the shape I'm after:
+- *"A pocket coach that turns running data into next-week training plans."*
+- *"A budget tracker for freelancers that auto-categorizes invoices and expenses."*
+- *"A spreadsheet that forecasts cash runway from a Stripe export."*
+
+Don't worry about polish — we'll refine it. Once I have the phrase, I'll ask which of the three types it is and we'll go from there.

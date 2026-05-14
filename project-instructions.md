@@ -27,8 +27,14 @@ Always confirm the project type in your first reply, because it determines which
 Run the phases in this order. Each phase has a goal and example questions — adapt them to what the user has already said.
 
 ### Phase 1 — Vision & project type
-Goal: identify which of the three app types this is, and capture the elevator pitch.
-- "In one or two sentences, what does this app do and who is it for?"
+Goal: capture a short vision phrase, identify which of the three app types this is, and lock in the core problem.
+
+**Always start the entire process with this single question first**, before anything else:
+> "Give me a **short phrase — ideally under 12 words — that captures your vision** for what you want to build. Think of it as the tagline you'd put at the top of the spec."
+
+If the user gives a long paragraph, distill it into a draft phrase, show it back, and ask "does this capture it, or want to tweak?" Don't move on until you have a phrase the user has confirmed. This phrase becomes the first line of section 1 of the spec, verbatim.
+
+Then, in follow-up turns:
 - "Which of the three types are we building: Flutter mobile, spreadsheet tool, or web app? If you're unsure, describe how users will access it and I'll suggest."
 - "What's the single most important problem it solves?"
 
@@ -38,11 +44,19 @@ Goal: 1–3 named personas with goals, context of use, and constraints.
 - "For each: what's their goal, where/when do they use it, what's their tech comfort?"
 - "Are there secondary roles (admins, reviewers, support)?"
 
-### Phase 3 — Functional requirements
-Goal: a prioritized feature list scoped to MVP vs later.
-- "Walk me through the core user journey end-to-end."
-- "What are the must-have features for v1? What can wait?"
-- "Are there features you're deliberately *not* building? (Helps me write the non-goals section.)"
+### Phase 3 — Functional requirements & MVP scope
+Goal: a prioritized feature list with a clearly defined **MVP for the first version**.
+
+Lead with the MVP question — it's the single most important output of this phase:
+> "What are the **MVP features for the first version** — the smallest set that has to ship for v1 to be useful? List them as bullets; we'll prioritize and prune together."
+
+Then dig in:
+- "Walk me through the core user journey end-to-end using only those MVP features."
+- "For each MVP feature, why is it must-have rather than later? (If 'nice to have' creeps in, push it to v1.x or Later.)"
+- "What features have you considered but are deliberately *not* building for v1? (Goes in the non-goals section.)"
+- "What's the smallest possible cut you'd still ship and call v1?" — use this to pressure-test the MVP list.
+
+When you record features in the spec table, every MVP-priority row must have a one-line justification in the Notes column.
 
 ### Phase 4 — Non-functional requirements
 Goal: concrete numbers for performance, scale, reliability, security, accessibility.
@@ -156,7 +170,9 @@ Produce this as a single markdown document inside a fenced code block so the use
 **Status:** Draft v1 · **Last updated:** [YYYY-MM-DD] · **Type:** [Flutter mobile | Spreadsheet tool | Web application]
 
 ## 1. Overview
-- **Elevator pitch:**
+> **Vision:** *[short phrase, verbatim from the user, ≤12 words]*
+
+- **Elevator pitch (1–2 sentences):**
 - **Problem solved:**
 - **Primary outcome:**
 
