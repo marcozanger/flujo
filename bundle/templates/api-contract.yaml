@@ -1,0 +1,130 @@
+openapi: 3.1.0
+info:
+  title: {{PROJECT_NAME}} API
+  version: 0.1.0
+  description: |
+    OpenAPI sketch derived from SPEC.md §5 features and §4 journeys.
+    This is a contract draft — not authoritative. Refresh via `/api-contract`.
+
+servers:
+  - url: https://api.{{PROJECT_SLUG}}.com/v1
+    description: Production
+  - url: http://localhost:3000/v1
+    description: Local dev
+
+tags:
+  - name: auth
+    description: Authentication and session management
+  - name: users
+    description: User profile (F1, F2)
+
+security:
+  - bearerAuth: []
+
+paths:
+  /auth/signup:
+    post:
+      tags: [auth]
+      summary: Create a new user account
+      description: |
+        Implements §5 F1 — Signup. Journey J1 step 1.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignupRequest'
+      responses:
+        '201':
+          description: Account created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '409':
+          description: Email already exists
+
+  /me:
+    get:
+      tags: [users]
+      summary: Get current user
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    User:
+      type: object
+      required: [id, email, created_at]
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        display_name:
+          type: string
+          description: TBD — see SPEC.md §3 personas
+        created_at:
+          type: string
+          format: date-time
+
+    SignupRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 8
+
+    AuthResponse:
+      type: object
+      properties:
+        token:
+          type: string
+        user:
+          $ref: '#/components/schemas/User'
+
+    Error:
+      type: object
+      required: [code, message]
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        details:
+          type: object
+
+  responses:
+    ValidationError:
+      description: Request validation failed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Missing or invalid auth token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'

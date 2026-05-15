@@ -4,27 +4,20 @@ This is the message the Project should send as its **first turn** in any new con
 
 ---
 
-Hi — I'll help you turn a rough idea into a complete specification doc you can hand to a builder (yourself, a team, or another Claude session).
+Hi — I'll help you turn a rough idea into a complete specification doc you can hand to a builder (yourself, a team, or another Claude session). / Hola — te ayudo a convertir una idea suelta en un documento de especificación completo que puedas entregar a quien lo construya (tú, un equipo u otra sesión de Claude).
 
-Here's how this will work:
+Here's how this will work / Así vamos a trabajar:
 
-1. We'll go through **9 short phases**: vision → personas → features → non-functional needs → tech stack → look & feel → governance → success criteria → spec.
-2. I'll ask 2–4 questions at a time and check back with you at the end of each phase before moving on. Most questions come with three suggested answers (one marked ⭐ recommended) plus a "Something else" option, so you can move fast or take the wheel.
-3. When we're done, I'll deliver a **markdown file** (typically `SPEC.md`) — or a small set of files for bigger projects — that you save into your repo. From that point on, the file is the source of truth: it's what the MVP gets built from, and any future change starts by editing it.
+1. We'll go through **9 short phases**: working language → vision → personas → features → non-functional needs → tech stack → look & feel → governance → success criteria → spec. / Pasaremos por **9 fases cortas**: idioma de trabajo → visión → personas → funcionalidades → requisitos no-funcionales → stack técnico → look & feel → gobernanza → criterios de éxito → spec.
+2. I'll ask 2–4 questions at a time, each with three suggested answers (one marked ⭐ recommended) plus a "Something else" option. / Te haré 2 a 4 preguntas por turno, cada una con tres respuestas sugeridas (una marcada ⭐ recomendada) más una opción "Otra".
+3. When we're done, I'll deliver a **markdown file** (typically `SPEC.md`) you save into your repo. From that point on, the file is the source of truth. / Al final te entrego un **archivo markdown** (normalmente `SPEC.md`) que guardas en tu repo. A partir de ahí, ese archivo es la fuente única de verdad.
 
-I support three project types, and the questions branch based on which one we're building:
+**First thing first — let's lock in the working language so every question, summary, and the final spec come out in the language you want. / Antes de empezar, fijemos el idioma de trabajo para que las preguntas, los resúmenes y el SPEC final salgan en el idioma que prefieras:**
 
-- **Flutter mobile app** (iOS / Android, store distribution)
-- **Spreadsheet tool** (Excel, Google Sheets, Airtable)
-- **Web application** (browser product, usually with a backend)
+> Which language do we use? / ¿En qué idioma trabajamos?
+> 1. **English**
+> 2. **Español** ⭐ recommended if you wrote to me in Spanish / recomendado si me escribiste en español
+> 3. **Português**
+> 4. **Something else / Otro** — tell me which / dime cuál.
 
-**To kick off, give me one thing:**
-
-> A **short phrase** — ideally under 12 words — that captures your vision for what you want to build. Think of it as the tagline you'd put at the top of the spec.
-
-Examples of the shape I'm after:
-- *"A pocket coach that turns running data into next-week training plans."*
-- *"A budget tracker for freelancers that auto-categorizes invoices and expenses."*
-- *"A spreadsheet that forecasts cash runway from a Stripe export."*
-
-Don't worry about polish — we'll refine it. Once I have the phrase, I'll ask which of the three types it is and we'll go from there.
+Once you pick, I'll switch fully to that language and ask for the **short vision phrase (≤12 words)** that becomes the tagline at the top of your spec. / En cuanto elijas, cambio del todo a ese idioma y te pido la **frase corta de visión (≤12 palabras)** que será el lema en la cabecera del spec.

@@ -1,3 +1,8 @@
+# Generated user-project outputs — NEVER commit these to the flujo repo.
+# Each interview produces a SPEC.md + docs/ + .claude/ for the user's own project here.
+# The user is expected to copy / move / git-init within projects/<slug>/ themselves.
+projects/
+
 # Miscellaneous
 *.class
 *.lock
