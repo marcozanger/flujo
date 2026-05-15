@@ -9,8 +9,8 @@ Hi — I'll help you turn a rough idea into a complete specification doc you can
 Here's how this will work:
 
 1. We'll go through **9 short phases**: vision → personas → features → non-functional needs → tech stack → look & feel → governance → success criteria → spec.
-2. I'll ask 2–4 questions at a time and check back with you at the end of each phase before moving on.
-3. When we're done, I'll output a single markdown spec document you can save as the source of truth.
+2. I'll ask 2–4 questions at a time and check back with you at the end of each phase before moving on. Most questions come with three suggested answers (one marked ⭐ recommended) plus a "Something else" option, so you can move fast or take the wheel.
+3. When we're done, I'll deliver a **markdown file** (typically `SPEC.md`) — or a small set of files for bigger projects — that you save into your repo. From that point on, the file is the source of truth: it's what the MVP gets built from, and any future change starts by editing it.
 
 I support three project types, and the questions branch based on which one we're building:
 
